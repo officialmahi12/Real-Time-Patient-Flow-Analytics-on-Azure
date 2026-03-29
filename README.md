@@ -3,7 +3,20 @@ Real-Time Patient Flow Analytics on Azure
 ## 🚀 Data Pipeline
 ![Pipeline](Pipeline.png)
 
+## 📊 Dashboard Insights
+This dashboard provides real-time insights into patient flow across departments.
 
+### 🏥 Overall Dashboard
+![Dashboard](DashBoard.png)
+*Overview of hospital operations*
+
+### 👩 Female Patients Analysis
+![Female Dashboard](FemaleDashBoard.png)
+*Insights focused on female patient data*
+
+### 👨 Male Patients Analysis
+![Male Dashboard](MaleDashBoard.png)
+*Insights focused on male patient data*
 
 📑 Table of Contents
 
