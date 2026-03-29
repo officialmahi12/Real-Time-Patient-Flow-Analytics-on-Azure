@@ -1,194 +1,194 @@
-Real-Time Patient Flow Analytics on Azure
+# 📊 Real-Time Patient Flow Analytics on Azure
+
+---
 
 ## 🚀 Data Pipeline
 ![Pipeline](Pipeline.png)
+
+---
 
 ## 📊 Dashboard Insights
 This dashboard provides real-time insights into patient flow across departments.
 
 ### 🏥 Overall Dashboard
-![Dashboard](DashBoard.png)
+![Dashboard](DashBoard.png)  
 *Overview of hospital operations*
 
 ### 👩 Female Patients Analysis
-![Female Dashboard](FemaleDashBoard.png)
+![Female Dashboard](FemaleDashBoard.png)  
 *Insights focused on female patient data*
 
 ### 👨 Male Patients Analysis
-![Male Dashboard](MaleDashBoard.png)
+![Male Dashboard](MaleDashBoard.png)  
 *Insights focused on male patient data*
 
-📑 Table of Contents
+---
 
-📌 Project Overview
-🎯 Objectives
-📂 Project Structure
-🛠️ Tools & Technologies
-📐 Data Architecture
-⭐ Star Schema Design
-⚙️ Step-by-Step Implementation
-📊 Data Analytics & Dashboard
-✅ Key Outcomes
-📜 License
+## 📑 Table of Contents
+- 📌 Project Overview
+- 🎯 Objectives
+- 📂 Project Structure
+- 🛠️ Tools & Technologies
+- 📐 Data Architecture
+- ⭐ Star Schema Design
+- ⚙️ Step-by-Step Implementation
+- 📊 Data Analytics & Dashboard
+- ✅ Key Outcomes
+---
 
+## 📌 Project Overview
+This project demonstrates a real-time data engineering pipeline for healthcare, designed to analyze patient flow across hospital departments using Azure cloud services.  
 
-📌 Project Overview
-This project demonstrates a real-time data engineering pipeline for healthcare, designed to analyze patient flow across hospital departments using Azure cloud services.
 The pipeline ingests streaming data, processes it in Databricks (PySpark), and stores it in Azure Synapse SQL Pool for analytics and visualization.
 
-Part 1 – Data Engineering: Build the real-time ingestion + transformation pipeline.
-Part 2 – Analytics: Connect Synapse to Power BI and design an interactive dashboard for hospital KPIs.
+**Part 1 – Data Engineering:** Build the real-time ingestion + transformation pipeline  
+**Part 2 – Analytics:** Connect Synapse to Power BI and design an interactive dashboard for hospital KPIs  
 
+---
 
-🔁 Pipeline Architecture
-Show Image
+## 🔁 Pipeline Architecture
+**Flow:**  
+Data Source → Event Hub (Kafka) → Databricks (Bronze/Silver/Gold) → Synapse SQL Pool → Power BI  
 
-Flow: Data Source → Event Hub (Kafka) → Databricks (Bronze/Silver/Gold) → Synapse SQL Pool → Power BI
-Security: Azure Key Vault + Azure AD protect all credentials and access control throughout the pipeline.
+**Security:**  
+Azure Key Vault + Azure AD protect all credentials and access control throughout the pipeline  
 
+---
 
-🎯 Objectives
+## 🎯 Objectives
+- Collect real-time patient data via Azure Event Hub  
+- Process and cleanse data using Databricks PySpark (Bronze → Silver → Gold layers)  
+- Implement a Star Schema in Synapse SQL Pool for efficient querying  
+- Build a live Power BI dashboard for hospital KPIs  
+- Enable full Version Control with Git  
 
-Collect real-time patient data via Azure Event Hub
-Process and cleanse data using Databricks PySpark (Bronze → Silver → Gold layers)
-Implement a Star Schema in Synapse SQL Pool for efficient querying
-Build a live Power BI dashboard for hospital KPIs
-Enable full Version Control with Git
+---
 
+## 📂 Project Structure
 
-📂 Project Structure
 Real-Time-Patient-Flow-Analytics-on-Azure/
 │
-├── 01_bronze_rawdata.py           # Raw ingestion from Event Hub → ADLS Bronze
-├── 02_silver_cleandata.py         # Data cleaning & validation
-├── 03_gold_transform.py           # Star schema transformation → Gold layer
+├── 01_bronze_rawdata.py
+├── 02_silver_cleandata.py
+├── 03_gold_transform.py
 │
-├── patient_flow_generator.py      # Streams fake patient events to Event Hub
+├── patient_flow_generator.py
 │
-├── SQL_pool_quries.sql            # External table DDL (Fact + Dimensions)
-├── SQL_views_DDL.sql              # 7 KPI & chart views for Power BI
+├── SQL_pool_quries.sql
+├── SQL_views_DDL.sql
 │
-├── Hospital_Dashboard.pbix        # Power BI dashboard file
+├── Hospital_Dashboard.pbix
 │
-├── client_requirements_detail.pdf # Client requirements document
-├── Pipeline.png                   # Architecture diagram
-├── DashBoard.png                  # Full dashboard screenshot
-├── FemaleDashBoard.png            # Dashboard filtered – Female patients
-├── MaleDashBoard.png              # Dashboard filtered – Male patients
+├── client_requirements_detail.pdf
+├── Pipeline.png
+├── DashBoard.png
+├── FemaleDashBoard.png
+├── MaleDashBoard.png
 └── README.md
 
-🛠️ Tools & Technologies
-ToolPurposeAzure Event HubReal-time data ingestion via Kafka protocolAzure DatabricksPySpark-based ETL (Bronze → Silver → Gold)Azure Data Lake Storage Gen2Staging raw and curated dataAzure Synapse SQL PoolData warehouse for analytics queriesAzure Key Vault / Azure ADSecrets management & access controlPower BIInteractive dashboarding & KPI visualizationPython 3.9+Core programming & data simulationGitVersion control
-
-📐 Data Architecture
-The pipeline follows a multi-layered Medallion architecture:
-Data Source → Event Hub (Kafka) → Databricks
-                                      │
-                              ┌───────▼────────┐
-                              │  Bronze Layer  │  ← Raw JSON from Event Hub
-                              │   (Raw Data)   │
-                              └───────┬────────┘
-                                      │
-                              ┌───────▼────────┐
-                              │  Silver Layer  │  ← Cleaned & validated
-                              │ (Cleaned Data) │
-                              └───────┬────────┘
-                                      │
-                              ┌───────▼────────┐
-                              │   Gold Layer   │  ← Star schema, BI-ready
-                              │(Business Ready)│
-                              └───────┬────────┘
-                                      │
-                             Synapse SQL Pool → Power BI
-
-Bronze Layer: Raw JSON data from Event Hub stored in ADLS as-is with ingestion timestamp
-Silver Layer: Cleaned and structured — invalid ages filtered, future timestamps removed, nulls dropped, duplicates handled
-Gold Layer: Transformed into Star Schema, ready for BI consumption
 
 
-⭐ Star Schema Design
-              ┌──────────────────┐
-              │   DimPatient     │
-              │  - surrogate_key │
-              │  - patient_id    │
-              │  - gender        │
-              │  - age           │
-              │  (SCD Type 2)    │
-              └────────┬─────────┘
-                       │
-┌───────────────┐  ┌───▼──────────────────────────┐
-│ DimDepartment │  │       FactPatientFlow         │
-│ - surrogate   │◄─│  - fact_id                   │
-│ - department  │  │  - patient_sk                 │
-│ - hospital_id │  │  - department_sk              │
-└───────────────┘  │  - admission_time             │
-                   │  - discharge_time             │
-                   │  - length_of_stay_hours       │
-                   │  - is_currently_admitted      │
-                   │  - bed_id                     │
-                   └───────────────────────────────┘
+---
 
-Fact Table: FactPatientFlow — patient visits, timestamps, length of stay, discharge status
-Dimension Tables:
+## 🛠️ Tools & Technologies
 
-DimPatient – Patient demographic info with SCD Type 2 history tracking
-DimDepartment – Department details & hospital mapping
+| Tool | Purpose |
+|------|--------|
+| Azure Event Hub | Real-time data ingestion via Kafka protocol |
+| Azure Databricks | PySpark-based ETL |
+| Azure Data Lake Storage Gen2 | Data storage |
+| Azure Synapse SQL Pool | Data warehouse |
+| Azure Key Vault / Azure AD | Security |
+| Power BI | Dashboarding |
+| Python 3.9+ | Programming |
+| Git | Version control |
+
+---
+
+## 📐 Data Architecture
+The pipeline follows a **Medallion architecture**:
+
+Data Source → Event Hub → Databricks → Bronze → Silver → Gold → Synapse → Power BI
 
 
+- **Bronze Layer:** Raw JSON data  
+- **Silver Layer:** Cleaned & validated  
+- **Gold Layer:** Business-ready Star Schema  
 
+---
 
-⚙️ Step-by-Step Implementation
-1. Event Hub Setup
+## ⭐ Star Schema Design
+- **Fact Table:** FactPatientFlow  
+- **Dimensions:**  
+  - DimPatient  
+  - DimDepartment  
 
-Created Event Hub namespace and patient-flow hub in Azure Portal
-Configured consumer groups for Databricks streaming
+---
 
-2. Data Simulation
+## ⚙️ Step-by-Step Implementation
 
-patient_flow_generator.py streams synthetic patient events via Kafka producer at 1 event/sec
-Covers 7 departments across 7 hospitals
-Includes dirty data injection (5% chance each): invalid ages (101–150) and future-dated admissions to test Silver layer cleaning
+### 1. Event Hub Setup
+- Created Event Hub namespace  
+- Configured consumer groups  
 
-3. Storage Setup
+### 2. Data Simulation
+- Streams synthetic data using Kafka  
+- Includes dirty data injection  
 
-Configured Azure Data Lake Storage Gen2
-Created containers: bronze, silver, gold
+### 3. Storage Setup
+- ADLS Gen2 containers: bronze, silver, gold  
 
-4. Databricks Processing
-NotebookLayerWhat it does01_bronze_rawdata.pyBronzeReads Event Hub stream, parses JSON schema, writes raw Parquet to ADLS02_silver_cleandata.pySilverFilters invalid ages, removes future timestamps, drops nulls, standardizes gender03_gold_transform.pyGoldBuilds DimPatient (SCD2), DimDepartment, FactPatientFlow as Star Schema
-5. Synapse SQL Pool
+### 4. Databricks Processing
 
-Created dedicated SQL Pool in Azure Synapse
-SQL_pool_quries.sql — creates external tables pointing to Gold layer Parquet files in ADLS
-SQL_views_DDL.sql — creates 7 analytical views used directly by Power BI
+| File | Layer | Description |
+|------|------|------------|
+| 01_bronze_rawdata.py | Bronze | Raw ingestion |
+| 02_silver_cleandata.py | Silver | Cleaning |
+| 03_gold_transform.py | Gold | Star schema |
 
-ViewKPIvw_bed_occupancyBed occupancy % by gendervw_bed_turnover_rateBed reuse rate by gendervw_patient_demographicsTotal active patients by gendervw_avg_treatment_durationAvg hours per department & gendervw_patient_volume_trendPatient count over timevw_department_inflowActive patients per departmentvw_overstay_patientsPatients admitted over 50 hours
-6. Version Control
+### 5. Synapse SQL Pool
+- External tables + analytical views  
+- KPI-based reporting  
 
-Full project tracked with Git
-Each layer committed separately with descriptive messages for clean history
+### 6. Version Control
+- Full Git tracking with commits  
 
+---
 
-📊 Data Analytics & Dashboard
-Once the Star Schema was live in Synapse SQL Pool, Power BI was connected via DirectQuery for real-time dashboard updates.
-🔗 Synapse → Power BI Connection
+## 📊 Data Analytics & Dashboard
 
-Connected Azure Synapse SQL Pool to Power BI via direct SQL connection
-Imported FactPatientFlow and all Dimension tables
-Established Star Schema relationships for optimized reporting
+Connected Synapse SQL Pool to Power BI via DirectQuery.
 
+### 📈 Full Dashboard
+*(Already shown above)*
 
-📈 Full Dashboard — Combined View
-Show Image
+### 👩 Female Dashboard
+*(Already shown above)*
 
-👩 Female Patient View
-Show Image
+### 👨 Male Dashboard
+*(Already shown above)*
 
-👨 Male Patient View
-Show Image
+---
 
-📌 Dashboard KPIs at a Glance
-KPIValue🛏️ Total Beds Turnover4.97 per bed👥 Total Patients2,240📊 Beds Occupied87.34%⏱️ Avg Treatment Duration35.58 hours🏥 DepartmentsEmergency, Surgery, ICU, Pediatrics, Maternity, Oncology, Cardiology🔍 Gender SlicerMale / Female drill-down across all visuals
+## 📌 Dashboard KPIs
 
-✅ Key Outcomes
-OutcomeDetailLatency ReducedFrom 24-hour manual reports to under 5-minute real-time dashboardEnd-to-End PipelineReal-time ingestion → transformation → warehouse → analyticsData QualityDirty data handled automatically in Silver layerScalable ArchitectureMedallion pattern adaptable to any hospital datasetBusiness InsightsAdmins monitor bed usage, patient flow and department bottlenecks in real timePortfolio ValueDemonstrates Data Engineering + Analytics + Cloud skills in one project
+| KPI | Value |
+|-----|------|
+| Total Beds Turnover | 4.97 |
+| Total Patients | 2,240 |
+| Beds Occupied | 87.34% |
+| Avg Treatment Duration | 35.58 hrs |
+
+---
+
+## ✅ Key Outcomes
+
+| Outcome | Detail |
+|--------|-------|
+| Latency Reduced | From 24 hrs → <5 mins |
+| Pipeline | End-to-end real-time |
+| Data Quality | Handled in Silver layer |
+| Architecture | Scalable Medallion |
+| Insights | Real-time hospital analytics |
+| Portfolio Value | Strong Data + Cloud project |
+
